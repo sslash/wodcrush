@@ -31,7 +31,7 @@ class HomeScreenViewController: UIViewController {
     }
     
     func fetchData () {
-        let url = URL(string: "https://6baa2858.ngrok.io/rest-api/wods")!
+        let url = URL(string: "https://fde1d242.ngrok.io/rest-api/wods")!
         print("Fething data...")
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             

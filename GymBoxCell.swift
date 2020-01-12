@@ -38,6 +38,7 @@ class GymBoxCell: UITableViewCell {
     @IBOutlet weak var gymName: UILabel!
     @IBOutlet weak var address: UILabel!
     @IBOutlet weak var wodText: UILabel!
+    @IBOutlet weak var cellView: UIView!
     
     func setGymBox(gymBox: GymBox) {
         gymName.text = gymBox.gymName
@@ -50,6 +51,9 @@ class GymBoxCell: UITableViewCell {
         self.imageLogo.clipsToBounds = true
         self.imageLogo.layer.borderColor = colorWithHexString(hexString: "#F4F7FC")
         self.imageLogo.layer.borderWidth = 1.0
+        
+        self.cellView.layer.cornerRadius = 4
+        self.cellView.clipsToBounds = true
     }
     
     
