@@ -19,7 +19,48 @@ class HomeScreenViewController: UIViewController {
         super.viewDidLoad()
         getLocalImages()
         fetchData()
+        showIntroModal()
         // Do any additional setup after loading the view.
+    }
+    
+    func showIntroModal () {
+        let defaults = UserDefaults.standard
+        guard defaults.string(forKey: exposedTo.onboardingV1) != nil else {
+            renderIntroModal()
+            return
+        }
+    }
+    
+    func renderIntroModal () {
+        let dialog = AZDialogViewController(title: "Welcome!", message: "Wodcrush gives you the daily workout from top Crossfit© boxes, every day 🏋️‍♀️")
+        dialog.rubberEnabled = true
+        
+        let primaryColor = uiColorWithHexString(hexString: "#631970")
+        let secundaryColor = uiColorWithHexString(hexString: "#1A1054")
+        dialog.titleColor = primaryColor
+
+        
+        dialog.imageHandler = { (imageView) in
+            imageView.image = UIImage(named: "logo")
+            imageView.contentMode = .scaleAspectFill
+            return true // must return true, otherwise image won't show.
+        }
+        
+        dialog.addAction(AZDialogAction(title: "Gotcha") { (dialog) -> (Void) in
+            let defaults = UserDefaults.standard
+            defaults.set(true, forKey: exposedTo.onboardingV1)
+            
+            dialog.dismiss()
+        })
+        
+        dialog.buttonStyle = { (button,height,position) in
+            button.setTitleColor(UIColor.white, for: .highlighted)
+            button.setTitleColor(secundaryColor, for: .normal)
+            button.layer.masksToBounds = true
+            button.layer.borderColor = secundaryColor.cgColor
+        }
+        
+        dialog.show(in: self)
     }
     
     func getLocalImages () {
@@ -30,8 +71,7 @@ class HomeScreenViewController: UIViewController {
     }
     
     func fetchData () {
-        let url = URL(string: "https://shift-music.herokuapp.com/rest-api/wods")!
-        print("Fething data...")
+        let url = URL(string: "http://localhost:8000/rest-api/wods")!
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             if error != nil {
