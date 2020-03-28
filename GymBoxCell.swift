@@ -1,3 +1,4 @@
+
 //
 //  GymBoxCell.swift
 //  wodcrush
@@ -7,44 +8,20 @@
 //
 import UIKit
 
-// TODO: move this into helpers
-func intFromHexString(hexStr: String) -> UInt32 {
-    var hexInt: UInt32 = 0
-    // Create scanner
-    let scanner: Scanner = Scanner(string: hexStr)
-    // Tell scanner to skip the # character
-    scanner.charactersToBeSkipped = CharacterSet(charactersIn: "#")
-    // Scan hex value
-    scanner.scanHexInt32(&hexInt)
-    return hexInt
-}
-
-func colorWithHexString(hexString: String, alpha:CGFloat = 1.0) -> CGColor {
-    
-    // Convert hex string to an integer
-    let hexint = Int(intFromHexString(hexStr: hexString))
-    let red = CGFloat((hexint & 0xff0000) >> 16) / 255.0
-    let green = CGFloat((hexint & 0xff00) >> 8) / 255.0
-    let blue = CGFloat((hexint & 0xff) >> 0) / 255.0
-    
-    // Create color object, specifying alpha as well
-    let color = UIColor(red: red, green: green, blue: blue, alpha: alpha).cgColor
-    return color
-}
-
 class GymBoxCell: UITableViewCell {
+    var selectionCallback: ((_ text: String) -> Void)?
     var imageLogoUri: String = ""
     @IBOutlet weak var imageLogo: UIImageView!
     @IBOutlet weak var gymName: UILabel!
     @IBOutlet weak var address: UILabel!
-    @IBOutlet weak var wodText: UILabel!
     @IBOutlet weak var cellView: UIView!
+    @IBOutlet weak var wodText: UILabel!
     
-    func setGymBox(gymBox: GymBox) {
+    func renderGymBox(gymBox: GymBox) {
         gymName.text = gymBox.gymName
-        wodText.text = gymBox.wodText
         address.text = gymBox.address
         imageLogoUri = gymBox.imageLogoUri
+        wodText.text = gymBox.wodText
         
         // image style
         self.imageLogo.layer.cornerRadius = 4
@@ -108,4 +85,12 @@ class GymBoxCell: UITableViewCell {
         task.resume()
     }
     
+    @objc
+    func tapFunction(sender:UITapGestureRecognizer) {
+        if let label = (sender.view) as? UILabel {
+            if let text = label.text {
+                self.selectionCallback?(text)
+            }
+        }
+    }
 }
